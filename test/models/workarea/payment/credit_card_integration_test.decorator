@@ -1,0 +1,5 @@
+module Workarea
+  decorate Payment::CreditCardIntegrationTest, with: :usaepay_transaction do #[8]
+    decorated { include UsaepayTransactionVcrGateway } #[9]
+  end
+end

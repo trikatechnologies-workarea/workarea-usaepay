@@ -1,0 +1,15 @@
+module Workarea
+  decorate Payment::Authorize::CreditCardTest, with: :usaepay_transaction do #[8]
+    decorated { include UsaepayTransactionVcrGateway } #[9]
+
+    # [10]
+    #
+    # def test_foo
+    #   VCR.use_cassette 'credit_card_gateway/foo' do
+    #     super
+    #   end
+    # end
+    #
+    # ...
+  end
+end
