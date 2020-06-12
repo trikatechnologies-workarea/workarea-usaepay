@@ -1,0 +1,34 @@
+module Workarea
+  decorate Payment::Authorize::CreditCard, with: :usaepay do #[2]
+    decorated do
+      include Payment::CreditCardData
+      delegate :address, to: :tender
+    end
+
+    def complete! #[3]
+      return unless Payment::StoreCreditCard.new(tender, options).save! #[4]
+
+      transaction.response = #[5][6]
+        handle_active_merchant_errors do #[7]
+          gateway.authorize( #[8]
+            transaction.amount.cents, #[9]
+            payment_source,
+            transaction_args #[10]
+          )
+        end
+
+      transaction.success?
+    end
+
+    def cancel! #[11]
+      return unless transaction.success? #[12]
+
+      transaction.cancellation = #[13][6]
+        handle_active_merchant_errors do #[7]
+          gateway.void( #[14]
+            transaction.response.authorization #[15]
+          )
+        end
+    end
+  end
+end
