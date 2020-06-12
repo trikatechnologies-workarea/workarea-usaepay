@@ -37,6 +37,31 @@ module ActiveMerchant
         commit(:authorization, post)
       end
 
+      def purchase(money, payment, options = {})
+        post = {}
+
+        add_amount(post, money)
+        add_invoice(post, options)
+
+        if payment.is_a? String
+          add_token(post, payment)
+        else
+          add_payment(post, payment, options)
+          unless payment.respond_to?(:track_data) && payment.track_data.present?
+            add_address(post, payment, options)
+            add_customer_data(post, options)
+          end
+        end
+
+        add_split_payments(post, options)
+        add_recurring_fields(post, options)
+        add_custom_fields(post, options)
+        add_line_items(post, options)
+        add_test_mode(post, options)
+
+        payment.respond_to?(:routing_number) ? commit(:check_purchase, post) : commit(:purchase, post)
+      end
+
       def add_token(post, credit_card)
         post[:card]   = credit_card
       end
