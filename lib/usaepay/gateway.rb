@@ -5,12 +5,6 @@ module ActiveMerchant
       attr_reader :key, :pin, :options
       class_attribute :test_rest_endpoint, :production_rest_endpoint
 
-      def verify(creditcard, options = {})
-        options = {
-          save_card: true
-        }
-        super
-      end
 
       def authorize(money, credit_card, options = {})
         post = {}
@@ -33,7 +27,6 @@ module ActiveMerchant
         add_line_items(post, options)
         add_test_mode(post, options)
         add_save_card(post, options)
-        
         commit(:authorization, post)
       end
 
@@ -58,6 +51,7 @@ module ActiveMerchant
         add_custom_fields(post, options)
         add_line_items(post, options)
         add_test_mode(post, options)
+        add_save_card(post, options)
 
         payment.respond_to?(:routing_number) ? commit(:check_purchase, post) : commit(:purchase, post)
       end

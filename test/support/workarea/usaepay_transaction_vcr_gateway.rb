@@ -7,9 +7,10 @@ module Workarea
 
     def set_up_gateway
       @_old_gateway = Workarea.config.gateways.credit_card
-      Workarea.config.gateways.credit_card = ActiveMerchant::Billing::UsaEpayTransactionGateway.new( #[5]
+      Workarea.config.gateways.credit_card = ActiveMerchant::Billing::UsaEpayCustom.new( #[5]
+        user: 'xxxx',
         login: 'xxxx',
-        pin: 'xxxxx',
+        password: 'xxxx',
         test: true
       )
     end

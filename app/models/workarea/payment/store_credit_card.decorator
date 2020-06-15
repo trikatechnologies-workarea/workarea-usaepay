@@ -4,9 +4,8 @@ module Workarea
       return true if @credit_card.token.present?
 
       response = handle_active_merchant_errors do
-        gateway.verify(@credit_card.to_active_merchant)
+        gateway.verify(@credit_card.to_active_merchant, {save_card: true})
       end
-
       @credit_card.token = response.params['token']
       response.success?
     end

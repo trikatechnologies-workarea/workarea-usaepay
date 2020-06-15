@@ -1,5 +1,5 @@
 module Workarea
   module Usaepay
-    VERSION = "1.0.0.pre".freeze
+    VERSION = "1.0.1".freeze
   end
 end
