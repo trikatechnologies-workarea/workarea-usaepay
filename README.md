@@ -6,7 +6,7 @@ Usaepay plugin for the Workarea platform.
 Overview
 --------------------------------------------------------------------------------
 
-1. TODO
+A plugin to integrate USA ePay transaction gateway with workarea E-Commerce. This will connect to sanbox / live using site urls and test params. This gateway plugin was written on top of ActiveMerchant::Billing::UsaEpayTransactionGateway
 
 Getting Started
 --------------------------------------------------------------------------------
