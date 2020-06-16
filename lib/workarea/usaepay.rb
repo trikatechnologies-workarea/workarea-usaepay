@@ -28,7 +28,7 @@ module Workarea
     end
 
     def self.auto_initialize_gateway
-      if credentials.present? && unless Rails.env.test?
+      if credentials.present?
         self.gateway = ActiveMerchant::Billing::UsaEpayCustom.new credentials
       else
         self.gateway = ActiveMerchant::Billing::BogusGateway.new
