@@ -29,12 +29,6 @@ module Workarea
 
     def self.auto_initialize_gateway
       if credentials.present? && unless Rails.env.test?
-        # if ENV['HTTP_PROXY'].present?
-        #   uri = URI.parse(ENV['HTTP_PROXY'])
-        #   ActiveMerchant::Billing::UsaEpayCustom.proxy_address = uri.host
-        #   ActiveMerchant::Billing::UsaEpayCustom.proxy_port = uri.port
-        # end
-
         self.gateway = ActiveMerchant::Billing::UsaEpayCustom.new credentials
       else
         self.gateway = ActiveMerchant::Billing::BogusGateway.new
