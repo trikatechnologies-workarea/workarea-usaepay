@@ -29,15 +29,15 @@ module Workarea
 
     def self.auto_initialize_gateway
       if credentials.present?
-        # if ENV['HTTP_PROXY'].present?
-        #   uri = URI.parse(ENV['HTTP_PROXY'])
-        #   Workarea::UsaEpay::Gateway.proxy_address = uri.host
-        #   Workarea::UsaEpay::Gateway.proxy_port = uri.port
-        # end
+        if ENV['HTTP_PROXY'].present?
+          uri = URI.parse(ENV['HTTP_PROXY'])
+          ActiveMerchant::Billing::UsaEpayCustom.proxy_address = uri.host
+          ActiveMerchant::Billing::UsaEpayCustom.proxy_port = uri.port
+        end
 
         self.gateway = ActiveMerchant::Billing::UsaEpayCustom.new credentials
       else
-        self.gateway = ActiveMerchant::Billing::BogusCreditCardGateway.new
+        self.gateway = ActiveMerchant::Billing::BogusGateway.new
       end
     end
   end
