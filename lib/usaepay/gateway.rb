@@ -14,11 +14,6 @@ module ActiveMerchant
         if credit_card.is_a? String
           add_token(post, credit_card)
         else
-          # Adding this override to avoid test script failures from wrokarea gems
-          # TODO: This should be removed from here all those test cases sould be updated
-          if credit_card.number == "1"
-            credit_card.number = "4111111111111111"
-          end
           add_payment(post, credit_card)
           add_address(post, credit_card, options)
           unless credit_card.track_data.present?

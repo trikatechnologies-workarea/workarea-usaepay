@@ -1,0 +1,57 @@
+module Workarea
+  decorate Payment::Authorize::StoreCreditTest, with: :usaepay_transaction do #[8]
+    decorated { include UsaepayTransactionVcrGateway } #[9]
+    def test_complete!
+      VCR.use_cassette 'credit_card/store_auth' do
+        transaction = tender.build_transaction(amount: 5.to_m)
+        operation = Payment::Authorize::StoreCredit.new(tender, transaction)
+
+        operation.complete!
+        profile.reload
+
+        assert_equal(10.to_m, profile.store_credit)
+        assert(transaction.success?)
+        assert_equal(
+          ActiveMerchant::Billing::Response,
+          transaction.response.class
+        )
+        assert_equal('purchase', transaction.action)
+
+        transaction = tender.build_transaction(amount: 100.to_m)
+        operation = Payment::Authorize::StoreCredit.new(tender, transaction)
+
+        operation.complete!
+        refute(transaction.success?)
+        assert(transaction.response)
+        assert_equal(
+          ActiveMerchant::Billing::Response,
+          transaction.response.class
+        )
+      end
+    end
+
+    def test_cancel!
+      VCR.use_cassette 'credit_card/store_auth' do
+        transaction = tender.build_transaction(amount: 5.to_m, success: false)
+        operation = Payment::Authorize::StoreCredit.new(tender, transaction)
+
+        operation.cancel!
+        profile.reload
+
+        assert_equal(15.to_m, profile.store_credit)
+
+        transaction = tender.build_transaction(amount: 5.to_m, success: true)
+        operation = Payment::Authorize::StoreCredit.new(tender, transaction)
+
+        operation.cancel!
+        profile.reload
+
+        assert_equal(20.to_m, profile.store_credit)
+        assert_equal(
+          ActiveMerchant::Billing::Response,
+          transaction.cancellation.class
+        )
+      end
+    end
+  end
+end

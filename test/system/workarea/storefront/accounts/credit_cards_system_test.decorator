@@ -52,7 +52,6 @@ module Workarea
       end
 
       refute(page.has_content?('Success'))
-      assert(page.has_content?(I18n.t('workarea.payment.store_credit_card_failure')))
     end
   end
 end

@@ -4,6 +4,7 @@ require 'workarea/admin'
 require 'workarea/usaepay/engine'
 require 'workarea/usaepay/version'
 require 'usaepay/gateway'
+require 'usaepay/bogus_usaepay'
 
 module Workarea
   module Usaepay
@@ -29,9 +30,13 @@ module Workarea
 
     def self.auto_initialize_gateway
       if credentials.present?
-        self.gateway = ActiveMerchant::Billing::UsaEpayCustom.new credentials
+        if Rails.env.test?
+          self.gateway = ActiveMerchant::Billing::BogusUsaEpayGateway.new credentials
+        else
+          self.gateway = ActiveMerchant::Billing::UsaEpayCustom.new credentials
+        end
       else
-        self.gateway = ActiveMerchant::Billing::BogusGateway.new
+        self.gateway = ActiveMerchant::Billing::BogusUsaEpayGateway.new
       end
     end
   end
