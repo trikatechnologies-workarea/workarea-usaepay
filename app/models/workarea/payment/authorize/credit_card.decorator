@@ -7,13 +7,14 @@ module Workarea
 
     def complete! #[3]
       return unless Payment::StoreCreditCard.new(tender, options).save! #[4]
-
+      ip_address = options[:checkout]&.order&.ip_address
       transaction.response = #[5][6]
         handle_active_merchant_errors do #[7]
           gateway.authorize( #[8]
             transaction.amount.cents, #[9]
             payment_source,
-            transaction_args #[10]
+            transaction_args,
+            ip_address
           )
         end
 
