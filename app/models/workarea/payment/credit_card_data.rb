@@ -2,9 +2,11 @@ module Workarea
   class Payment
     module CreditCardData
       def transaction_args
+        ip_address = options[:checkout]&.order&.ip_address
         {
           order_id: tender.payment.id,
-          billing_address: billing_address
+          billing_address: billing_address,
+          ip_address: ip_address
         }
       end
 

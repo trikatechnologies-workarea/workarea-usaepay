@@ -6,9 +6,9 @@ module ActiveMerchant
       class_attribute :test_rest_endpoint, :production_rest_endpoint
 
 
-      def authorize(money, credit_card, options = {}, ip_address)
+      def authorize(money, credit_card, options = {})
         post = {}
-        post[:ip] = ip_address if ip_address.present?
+        post[:ip] = options[:ip_address] if options[:ip_address].present?
         add_amount(post, money)
         add_invoice(post, options)
 
