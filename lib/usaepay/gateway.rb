@@ -7,11 +7,14 @@ module ActiveMerchant
 
 
       def authorize(money, credit_card, options = {})
+        billing_address = options[:billing_address] || options[:address]
+
         post = {}
         post[:ip] = options[:ip_address] if options[:ip_address].present?
+        post[:name] = billing_address[:name] if billing_address.present?
         add_amount(post, money)
         add_invoice(post, options)
-
+        add_address_for_type(:billing, post, credit_card, billing_address) if billing_address
         if credit_card.is_a? String
           add_token(post, credit_card)
         else
